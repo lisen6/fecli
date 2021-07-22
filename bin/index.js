@@ -4,7 +4,7 @@ const chalk = require("chalk");
 const figlet = require("figlet");
 const pkg = require("../package");
 const create = require("../lib/create");
-const app = require("../webpack");
+const { startService } = require("../webpack/start");
 
 program
   .command("init <name>")
@@ -18,10 +18,7 @@ program
   .command("dev")
   .description("Start the project")
   .action(() => {
-    // 启动 HTTP 服务器，服务器监听在 3000 端口
-    app.listen(3009, () => {
-      console.log("server 3009");
-    });
+    startService();
   });
 
 program

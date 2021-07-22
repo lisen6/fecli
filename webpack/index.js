@@ -1,13 +1,12 @@
+const path = require("path");
 const express = require("express");
 const webpack = require("webpack");
 const webpackMiddleware = require("webpack-dev-middleware");
 const webpackHotMiddle = require("webpack-hot-middleware");
-const config = require("./webpack.config");
-
-console.log(process.cwd(), 11111);
+const commonConfig = require("./webpack.common");
 
 const app = express();
-const compiler = webpack(config);
+const compiler = webpack(commonConfig());
 // 给 app 注册 webpackMiddleware 中间件
 app.use(
   webpackMiddleware(compiler, {
@@ -39,6 +38,6 @@ app.use(
 
 app.use(webpackHotMiddle(compiler));
 // 把项目根目录作为静态资源目录，用于服务 HTML 文件
-app.use(express.static("."));
+app.use(express.static("./public"));
 
 module.exports = app;
