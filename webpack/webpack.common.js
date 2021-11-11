@@ -1,6 +1,8 @@
 const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
-const { CleanWebpackPlugin } = require("clean-webpack-plugin");
+const {
+  CleanWebpackPlugin
+} = require("clean-webpack-plugin");
 const HotModuleReplacementPlugin = require("webpack/lib/HotModuleReplacementPlugin");
 
 const resolveCWDPath = (targetPath) => {
@@ -15,7 +17,7 @@ module.exports = function () {
     devtool: "source-map",
     entry: [
       // 为了支持模块热替换，注入代理客户端
-      "webpack-hot-middleware/client",
+      // "webpack-hot-middleware/client",
       // 入口文件
       path.resolve(process.cwd(), "./entry/index.js"),
     ],
@@ -28,12 +30,10 @@ module.exports = function () {
       modules: [path.resolve(__dirname, "node_modules")],
     },
     module: {
-      rules: [
-        {
-          test: /\.(js)$/,
-          loader: require.resolve("babel-loader"),
-        },
-      ],
+      rules: [{
+        test: /\.(js)$/,
+        loader: require.resolve("babel-loader"),
+      }, ],
     },
     plugins: [
       new HtmlWebpackPlugin({
@@ -49,9 +49,15 @@ module.exports = function () {
   // 合并用户的webpack.config配置
   if (typeof config === "function") {
     let userConfig = config(commonConfig);
-    commonConfig = { ...commonConfig, ...userConfig };
+    commonConfig = {
+      ...commonConfig,
+      ...userConfig
+    };
   } else {
-    commonConfig = { ...commonConfig, ...config };
+    commonConfig = {
+      ...commonConfig,
+      ...config
+    };
   }
 
   return commonConfig;

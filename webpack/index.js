@@ -10,7 +10,6 @@ const compiler = webpack(commonConfig());
 // 给 app 注册 webpackMiddleware 中间件
 app.use(
   webpackMiddleware(compiler, {
-    // webpack-dev-middleware 所有支持的配置项
     // 只有 publicPath 属性为必填，其它都是选填项
 
     // Webpack 输出资源绑定在 HTTP 服务器上的根目录，
@@ -21,10 +20,14 @@ app.use(
     index: "index.html",
 
     // 自定义 HTTP 头
-    headers: { "X-Custom-Header": "yes" },
+    headers: {
+      "X-Custom-Header": "yes"
+    },
 
     // 给特定文件后缀的文件添加 HTTP mimeTypes ，作为文件类型映射表
-    mimeTypes: { "text/html": ["phtml"] },
+    mimeTypes: {
+      "text/html": ["phtml"]
+    },
 
     // 统计信息输出样式
     stats: {
@@ -32,7 +35,7 @@ app.use(
     },
 
     // 开启或关闭服务端渲染
-    serverSideRender: false,
+    serverSideRender: false
   })
 );
 
