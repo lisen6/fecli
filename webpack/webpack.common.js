@@ -1,4 +1,5 @@
 const path = require("path");
+const fs = require('fs')
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const {
   CleanWebpackPlugin
@@ -9,7 +10,15 @@ const resolveCWDPath = (targetPath) => {
   return path.resolve(process.cwd(), targetPath);
 };
 
-const config = require(resolveCWDPath("./config/webpack.config"));
+
+function isExistFile(path) {
+  return fs.existsSync(path)
+}
+let config = {}
+let targetPath = isExistFile(resolveCWDPath("./config/webpack.config.js"))
+if (isExistFile(targetPath)) {
+  config = require(targetPath)
+}
 
 module.exports = function () {
   let commonConfig = {
@@ -47,18 +56,18 @@ module.exports = function () {
   };
 
   // 合并用户的webpack.config配置
-  if (typeof config === "function") {
-    let userConfig = config(commonConfig);
-    commonConfig = {
-      ...commonConfig,
-      ...userConfig
-    };
-  } else {
-    commonConfig = {
-      ...commonConfig,
-      ...config
-    };
-  }
+  // if (typeof config === "function") {
+  //   let userConfig = config(commonConfig);
+  //   commonConfig = {
+  //     ...commonConfig,
+  //     ...userConfig
+  //   };
+  // } else {
+  //   commonConfig = {
+  //     ...commonConfig,
+  //     ...config
+  //   };
+  // }
 
   return commonConfig;
 };
