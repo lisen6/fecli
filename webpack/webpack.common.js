@@ -16,8 +16,8 @@ function isExistFile(path) {
 }
 let config = {}
 let targetPath = isExistFile(resolveCWDPath("./config/webpack.config.js"))
-if (isExistFile(targetPath)) {
-  config = require(targetPath)
+if (targetPath) {
+  config = require(resolveCWDPath("./config/webpack.config.js"))
 }
 
 module.exports = function () {
@@ -31,7 +31,7 @@ module.exports = function () {
       path.resolve(process.cwd(), "./entry/index.js"),
     ],
     output: {
-      path: path.join(__dirname, "dist"),
+      path: path.resolve(process.cwd(), "dist"),
       filename: "[name].js",
     },
     resolve: {
@@ -56,18 +56,11 @@ module.exports = function () {
   };
 
   // 合并用户的webpack.config配置
-  // if (typeof config === "function") {
-  //   let userConfig = config(commonConfig);
-  //   commonConfig = {
-  //     ...commonConfig,
-  //     ...userConfig
-  //   };
-  // } else {
-  //   commonConfig = {
-  //     ...commonConfig,
-  //     ...config
-  //   };
-  // }
+  let mergedConfig = {
+    ...(typeof config === "function" ? config(commonConfig) : config),
+    ...commonConfig,
 
-  return commonConfig;
+  };
+
+  return mergedConfig;
 };
