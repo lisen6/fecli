@@ -1,0 +1,20 @@
+{
+  "name": "cli-demo",
+  "version": "1.0.0",
+  "description": "",
+  "main": "./entry/index.js",
+  "dependencies": {
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
+    "webpack": "^5.45.1",
+    "webpack-hot-middleware": "^2.25.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "start": "fecli dev",
+    "build": "fecli build"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
