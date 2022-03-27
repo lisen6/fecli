@@ -1,12 +1,9 @@
 const path = require('path')
 const fs = require('fs')
-const DotenvModule = require('./dotenv')
-const Metalsmith = require('metalsmith')
 const chalk = require('chalk')
-const file = require('fs-extra/lib/ensure/file')
-const metalsmith = Metalsmith(
-  path.join(__dirname, '..', 'template', 'react-template'),
-)
+const dotenv = require('dotenv')
+const os = require('os')
+
 /**
  * 获取执行命令的目标路径
  * @param {*} targetPath 目标路径
@@ -42,23 +39,39 @@ var exists = function (src, dst, callback) {
 
 const copyTemplate = (sourcePath, targetPath) => {}
 
-function removeTemplate(path) {
-  const STATUS = fs.statSync(path)
-  if (STATUS.isFile()) {
-    fs.unlinkSync(path)
-    //如果原路径是目录
-  } else if (STATUS.isDirectory()) {
-    fs.readdirSync(path).forEach((item) => {
-      remove(`${path}/${item}`)
-    })
-    fs.rmdirSync(path)
+function removeTemplate(path) {}
+
+// 注入.env文件环境变量
+function injectEnvVariable() {
+  const mode = process.env.NODE_ENV || 'development'
+  const envConfigPath = resolveCWDPath(`.env.${mode}`)
+  dotenv.config({ path: envConfigPath }).parsed
+}
+
+// 获取本机ip
+function getIPAddress() {
+  /**os.networkInterfaces() 返回一个对象，该对象包含已分配了网络地址的网络接口 */
+  const interfaces = os.networkInterfaces()
+  for (let devName in interfaces) {
+    const iface = interfaces[devName]
+    for (let i = 0; i < iface.length; i++) {
+      const alias = iface[i]
+      if (
+        alias.family === 'IPv4' &&
+        alias.address !== '127.0.0.1' &&
+        !alias.internal
+      ) {
+        return alias.address
+      }
+    }
   }
 }
 
 module.exports = {
   resolveCWDPath,
   isExistFile,
-  injectEnvVariable: DotenvModule.config,
+  injectEnvVariable,
   copyTemplate,
   removeTemplate,
+  getIPAddress,
 }

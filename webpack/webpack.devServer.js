@@ -15,11 +15,9 @@ app.use(
     publicPath: '/',
     // 自定义 HTTP 头
     headers: {
-      'X-Custom-Header': 'yes',
+      'X-Custom-Header': 'null',
     },
-    stats: {
-      colors: true,
-    },
+    stats: 'errors-warnings',
     // 开启或关闭服务端渲染
     serverSideRender: false,
   }),

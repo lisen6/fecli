@@ -2,6 +2,7 @@ const path = require('path')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const { CleanWebpackPlugin } = require('clean-webpack-plugin')
 const HotModuleReplacementPlugin = require('webpack/lib/HotModuleReplacementPlugin')
+
 const { resolveCWDPath, isExistFile, injectEnvVariable } = require('../utils')
 
 // 加载用户的 webpack 配置
@@ -11,7 +12,6 @@ if (targetPath) {
   userConfig = require(resolveCWDPath('./config/webpack.config.js'))
 }
 
-console.log(resolveCWDPath('./entry/index.js'))
 module.exports = function (options) {
   let webpackBaseConfig = {
     mode: 'development',
@@ -34,6 +34,7 @@ module.exports = function (options) {
         {
           test: /\.(js|jsx)$/,
           loader: require.resolve('babel-loader'),
+          exclude: /node_modules/,
           options: {
             presets: [
               require.resolve('@babel/preset-env'),
@@ -54,7 +55,7 @@ module.exports = function (options) {
   }
 
   // 注入 process.env 环境变量
-  injectEnvVariable(options.dotenv)
+  injectEnvVariable()
 
   // 合并用户的 webpack.config 配置
   let mergedConfig = {

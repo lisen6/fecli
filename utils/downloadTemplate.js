@@ -70,8 +70,6 @@ async function downloadTemplate(name, options) {
   }
 }
 
-function getTemplate() {}
-
 module.exports = {
   downloadTemplate,
 }
