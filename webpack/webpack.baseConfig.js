@@ -1,18 +1,23 @@
 const path = require('path')
+const fse = require('fs-extra')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const { CleanWebpackPlugin } = require('clean-webpack-plugin')
 const HotModuleReplacementPlugin = require('webpack/lib/HotModuleReplacementPlugin')
 
-const { resolveCWDPath, isExistFile, injectEnvVariable } = require('../utils')
+const { resolveCWDPath, pathExists, injectEnvVariable } = require('../utils')
 
 // 加载用户的 webpack 配置
-let userConfig = {}
-let targetPath = isExistFile(resolveCWDPath('./config/webpack.config.js'))
-if (targetPath) {
-  userConfig = require(resolveCWDPath('./config/webpack.config.js'))
+function resolveConfig() {
+  let userConfig = {}
+  let configPath = resolveCWDPath('./config/webpack.config.js')
+  let isExist = fse.pathExistsSync(configPath, (err) => {
+    if (err) return console.log(err)
+  })
+  if (isExist) userConfig = require(configPath)
+  return userConfig
 }
 
-module.exports = function (options) {
+module.exports = function () {
   let webpackBaseConfig = {
     mode: 'development',
     devtool: 'source-map',
@@ -58,6 +63,7 @@ module.exports = function (options) {
   injectEnvVariable()
 
   // 合并用户的 webpack.config 配置
+  let userConfig = resolveConfig()
   let mergedConfig = {
     ...(typeof userConfig === 'function'
       ? userConfig(webpackBaseConfig)

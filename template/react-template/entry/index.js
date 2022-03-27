@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import ReactDOM from 'react-dom'
+import user from './user'
 
 function App() {
 	let [count, setCount] = useState(0)
@@ -8,7 +9,11 @@ function App() {
 		setCount(count + 1)
 	}
 
-	return <div onClick={handleClick}>点击了{count}次</div>
+	return (
+		<div onClick={handleClick}>
+			{user}点击了{count}次
+		</div>
+	)
 }
 
 ReactDOM.render(<App />, document.querySelector('#root'))

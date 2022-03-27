@@ -1,6 +1,5 @@
 const path = require('path')
-const fs = require('fs')
-const chalk = require('chalk')
+const fse = require('fs-extra')
 const dotenv = require('dotenv')
 const os = require('os')
 
@@ -14,32 +13,43 @@ const resolveCWDPath = (targetPath) => {
 }
 
 /**
- * 判断当前文件是否存在
- * @param {*} path 目标文件的url
+ * 判断当前文件(夹)是否存在
+ * @param {*} path 目标文件的路径
  * @returns
  */
-function isExistFile(path) {
-  return fs.existsSync(path)
+async function pathExists(path) {
+  try {
+    let isExist = await fse.pathExists(path)
+    return isExist
+  } catch (error) {
+    console.log(error)
+  }
 }
 
-var exists = function (src, dst, callback) {
-  fs.exists(dst, function (exists) {
-    // 已存在
-    if (exists) {
-      callback(src, dst)
-    }
-    // 不存在
-    else {
-      fs.mkdir(dst, function () {
-        callback(src, dst)
-      })
-    }
-  })
+/**
+ *
+ * @param {*} originalPath 源文件路径
+ * @param {*} targetPath 目标路径
+ */
+async function copy(originalPath, targetPath) {
+  try {
+    await fse.copy(originalPath, targetPath)
+  } catch (error) {
+    console.log(error)
+  }
 }
 
-const copyTemplate = (sourcePath, targetPath) => {}
-
-function removeTemplate(path) {}
+/**
+ *
+ * @param {*} originalPath 删除路径
+ */
+async function remove(originalPath) {
+  try {
+    await fse.remove(originalPath)
+  } catch (error) {
+    console.log(error)
+  }
+}
 
 // 注入.env文件环境变量
 function injectEnvVariable() {
@@ -68,10 +78,10 @@ function getIPAddress() {
 }
 
 module.exports = {
+  pathExists,
+  copy,
+  remove,
   resolveCWDPath,
-  isExistFile,
   injectEnvVariable,
-  copyTemplate,
-  removeTemplate,
   getIPAddress,
 }

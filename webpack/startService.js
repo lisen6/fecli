@@ -10,7 +10,6 @@ const startService = () => {
   IP = IP ?? getIPAddress()
   app.listen(DEV_SERVER_PORT, () => {
     const { name, version } = pkg
-    console.log('\r\n')
     console.log(
       chalk.cyan(`  ${name} v${version}`) +
         chalk.green(' dev server running at:\r\n'),

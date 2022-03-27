@@ -1,15 +1,14 @@
 const path = require('path')
-const fs = require('fs')
 const inquirer = require('inquirer')
-const ora = require('ora')
-const { isExistFile, copyTemplate, removeTemplate } = require('../utils')
+const { pathExists, resolveCWDPath, copy, remove } = require('../utils')
 
 async function downloadTemplate(name, options) {
   const cwdPath = process.cwd()
-  const targetDirPath = path.join(cwdPath, name)
-  if (isExistFile(targetDirPath)) {
+  const targetDirPath = resolveCWDPath(`${cwdPath}/${name}`)
+  let isExist = await pathExists(targetDirPath)
+  if (isExist) {
     if (options.force) {
-      await fs.remove(targetDirPath)
+      await remove(targetDirPath)
     } else {
       // 询问是否确定要覆盖
       let { isRemove } = await inquirer.prompt([
@@ -20,7 +19,7 @@ async function downloadTemplate(name, options) {
           choices: [
             {
               name: 'Overwrite',
-              value: 'overwrite',
+              value: true,
             },
             {
               name: 'Cancel',
@@ -30,17 +29,16 @@ async function downloadTemplate(name, options) {
         },
       ])
 
-      if (isRemove === 'overwrite') {
-        const spinner = ora(`\r\nRemoving...`)
-        spinner.start()
+      if (isRemove) {
+        console.log(`\r\n  removing...`)
         try {
-          let result = await removeTemplate(targetDirPath)
-          if (result) {
-            spinner.succeed('remove success')
-          }
+          await remove(targetDirPath)
+          console.log('\r\n  remove success')
         } catch (error) {
-          spinner.fail('remove failed:', error)
+          console.log('\r\n  remove failed:', error)
         }
+      } else {
+        await remove(targetDirPath)
       }
     }
   } else {
@@ -65,8 +63,16 @@ async function downloadTemplate(name, options) {
 
     // 获取模板路径
     let templatePath = path.join(__dirname, '..', 'template', templateName)
-    console.log(templatePath, 'templatePath')
-    copyTemplate(templatePath, targetDirPath)
+    console.log(`\r\nScaffolding project in ${targetDirPath} \r\n`)
+    try {
+      console.log(`Done. Now run:\r\n`)
+      console.log(`  cd ${name}\r`)
+      console.log(`  npm install\r`)
+      console.log(`  npm run start\r\n`)
+      await copy(templatePath, targetDirPath)
+    } catch (error) {
+      console.log('  generate failed:', error)
+    }
   }
 }
 

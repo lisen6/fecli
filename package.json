@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "bin": {
-    "fecli": "./bin/index.js"
+    "fecli": "/bin/index.js"
   },
   "scripts": {},
   "author": "vayne1Q",

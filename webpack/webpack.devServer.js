@@ -5,9 +5,7 @@ const webpackHotMiddle = require('webpack-hot-middleware')
 const webpackBaseConfig = require('./webpack.baseConfig')
 
 const app = express()
-const compiler = webpack(
-  webpackBaseConfig({ dotenv: { mode: 'development', override: true } }),
-)
+const compiler = webpack(webpackBaseConfig())
 // 给 app 注册 webpackMiddleware 中间件
 app.use(
   webpackMiddleware(compiler, {
@@ -17,9 +15,7 @@ app.use(
     headers: {
       'X-Custom-Header': 'null',
     },
-    stats: 'errors-warnings',
-    // 开启或关闭服务端渲染
-    serverSideRender: false,
+    // stats: 'errors-warnings',
   }),
 )
 
