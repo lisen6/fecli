@@ -1,0 +1,18 @@
+{
+  "name": "cli-demo",
+  "version": "1.0.0",
+  "description": "",
+  "main": "./entry/index.js",
+  "dependencies": {
+    "cross-env": "^7.0.3",
+    "webpack": "^5.45.1",
+    "webpack-hot-middleware": "^2.25.0"
+  },
+  "scripts": {
+    "start": "cross-env NODE_ENV=development fecli dev",
+    "build": "cross-env NODE_ENV=production fecli build"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}

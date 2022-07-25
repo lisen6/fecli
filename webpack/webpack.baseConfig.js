@@ -4,7 +4,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin')
 const { CleanWebpackPlugin } = require('clean-webpack-plugin')
 const HotModuleReplacementPlugin = require('webpack/lib/HotModuleReplacementPlugin')
 
-const { resolveCWDPath, pathExists, injectEnvVariable } = require('../utils')
+const { resolveCWDPath, injectEnvVariable } = require('../utils')
 
 // 加载用户的 webpack 配置
 function resolveConfig() {
